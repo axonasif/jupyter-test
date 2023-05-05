@@ -3,10 +3,15 @@ image:
 
 tasks:
   - init: pip install -r requirements.txt
-
+  - command: |
+      printf "\033[3J\033c\033[3J"
+      printf '>>> %s\n' \
+        "Please open the workspace in VS Code Desktop" \
+        "See https://www.gitpod.io/docs/references/ides-and-editors/vscode for more info."
 
 vscode:
   extensions:
+    - ms-python.isort
     - ms-python.python
     - ms-toolsai.jupyter
     - formulahendry.auto-close-tag

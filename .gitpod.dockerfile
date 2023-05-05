@@ -1,28 +1,9 @@
-FROM gitpod/workspace-base:latest
+# https://github.com/gitpod-io/workspace-images/issues/1071
+FROM axonasif/workspace-python:debug2
 
-RUN echo "CI version from base"
-
-### Python ###
-USER gitpod
-RUN sudo install-packages python3-pip
-
-ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH
-RUN curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash \
-    && { echo; \
-    echo 'eval "$(pyenv init -)"'; \
-    echo 'eval "$(pyenv virtualenv-init -)"'; } >> /home/gitpod/.bashrc.d/60-python \
-    && pyenv update \
-    && pyenv install 3.8.12 \
-    && pyenv global 3.8.12 \
-    && python3 -m pip install --no-cache-dir --upgrade pip \
-    && python3 -m pip install --no-cache-dir --upgrade \
-    setuptools wheel virtualenv pipenv pylint rope flake8 \
-    mypy autopep8 pep8 pylama pydocstyle bandit notebook \
-    twine \
-    && sudo rm -rf /tmp/*USER gitpod
-ENV PYTHONUSERBASE=/workspace/.pip-modules \
-    PIP_USER=yes
-ENV PATH=$PYTHONUSERBASE/bin:$PATH
+# Install deps to speed up the workspace startup
+COPY requirements.txt /tmp
+RUN pip install -r /tmp/requirements.txt
 
 # Setup Heroku CLI
 RUN curl https://cli-assets.heroku.com/install.sh | sh
